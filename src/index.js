@@ -1,1 +1,1 @@
-alert('da')
+require

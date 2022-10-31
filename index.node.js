@@ -1,11 +1,9 @@
 import http from 'http'
-import CONFIG from './config.js'
+import { CONFIG } from './config.js'
 import controller from './src/routes.js'
 import CustomError from './src/misc/CustomError.js'
 
 
-
-console.log(CONFIG)
 /**
  * @param {http.IncomingMessage} req
  * @param {http.ServerResponse} res

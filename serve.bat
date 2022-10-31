@@ -1,1 +1,0 @@
-@http-server web-ui --cors

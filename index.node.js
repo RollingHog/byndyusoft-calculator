@@ -1,18 +1,18 @@
 import http from 'http'
+import CONFIG from './config.js'
 import controller from './src/routes.js'
 import CustomError from './src/misc/CustomError.js'
 
-const SERVER_PORT = 8080
-const ALLOW_CORS = true
-const REQUEST_TIMEOUT = 5000
 
+
+console.log(CONFIG)
 /**
  * @param {http.IncomingMessage} req
  * @param {http.ServerResponse} res
  */
 function serverHandlerRaw(req, res) {
 
-  if(ALLOW_CORS) {
+  if(CONFIG.ALLOW_CORS) {
     res.setHeader('Access-Control-Allow-Origin', '*')
     res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
   }
@@ -62,7 +62,7 @@ function serverHandler(req, res) {
     if(!res.headersSent)
     res.writeHead(408)
     res.end('Timeout')
-  }, REQUEST_TIMEOUT)
+  }, CONFIG.REQUEST_TIMEOUT)
 }
 
 const server = http.createServer(serverHandler)
@@ -76,4 +76,4 @@ const server = http.createServer(serverHandler)
 //   // res.end(body)
 // }
 
-server.listen(SERVER_PORT)
+server.listen(CONFIG.SERVER_PORT)

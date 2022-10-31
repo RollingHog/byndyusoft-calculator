@@ -16,12 +16,7 @@ const HTTP_METHOD = {
 class Controller {
   constructor() {
     this.routes = {}
-    this.routes[HTTP_METHOD.GET] = {
-      '/routes': {},
-      '/version': {},
-    }
-    this.routes[HTTP_METHOD.GET]['/routes'] = () => JSON.stringify(this.routes,  (key, val) => typeof val === 'function' ? '[Function]' : val)
-    this.routes[HTTP_METHOD.GET]['/version'] = () => VERSION
+    this.routes[HTTP_METHOD.GET] = {}
     this.routes[HTTP_METHOD.POST] = {}
   }
 
@@ -39,7 +34,6 @@ class Controller {
   }
 
   /**
-   * @param {string} method
    * @param {string} route
    * @param {ControllerCallbackFunction} callback
    */
@@ -48,7 +42,6 @@ class Controller {
   }
 
   /**
-   * @param {string} method
    * @param {string} route
    * @param {ControllerCallbackFunction} callback
    */
@@ -77,4 +70,9 @@ class Controller {
   }
 }
 
-export const controller = new Controller()
+const controller = new Controller()
+
+controller.GET('/routes', () => JSON.stringify(this.routes,  (key, val) => typeof val === 'function' ? '[Function]' : val))
+controller.GET('/version', () => VERSION)
+
+export default controller

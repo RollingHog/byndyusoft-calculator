@@ -2,13 +2,13 @@ import http from 'http'
 import { CONFIG } from './config.js'
 import controller from './src/routes.js'
 import CustomError from './src/misc/CustomError.js'
-
+import { sleep } from './src/misc/sleep.js'
 
 /**
  * @param {http.IncomingMessage} req
  * @param {http.ServerResponse} res
  */
-function serverHandlerRaw(req, res) {
+async function serverHandlerRaw(req, res) {
 
   if(CONFIG.ALLOW_CORS) {
     res.setHeader('Access-Control-Allow-Origin', '*')
@@ -31,47 +31,43 @@ function serverHandlerRaw(req, res) {
     res.writeHead(200)
     res.end('')
   } else {
-    res.writeHead(400)
-    res.end('Method not allowed')
+    throw new CustomError(400, 'Method not allowed')
   }
 
+  await sleep(CONFIG.REQUEST_TIMEOUT)
+  if(!res.headersSent) {
+    throw new CustomError(408, 'Timeout')
+  }
 }
 
 /**
  * @param {http.IncomingMessage} req
  * @param {http.ServerResponse} res
  */
-function serverHandler(req, res) {
+async function serverHandler(req, res) {
   console.log((new Date()).toJSON(), req.method, req.url)
   try {
-    serverHandlerRaw(req, res)
+    await serverHandlerRaw(req, res)
   } catch (e) {
-    console.log(e.code, e)
+    console.log(e.code, e.message)
     if(e instanceof CustomError) {
       res.writeHead(e.code)
-      res.end('ERROR\n\n' + e.message)
+      res.end(`ERROR ${e.code}\n\n` + e.message)
     } else {
+      console.log(e.stack)
       res.writeHead(500)
-      res.end('Internal server error')
+      res.end('ERROR 500 \n\nInternal server error')
     }
   }
-
-  setTimeout( _ => {
-    if(!res.headersSent)
-    res.writeHead(408)
-    res.end('Timeout')
-  }, CONFIG.REQUEST_TIMEOUT)
 }
 
 const server = http.createServer(serverHandler)
 
-// function mainController(req, res, body = null) {
 //   // GET
 //   // res.writeHead(200, { "Content-Type": "text/html" })
 //   // fs.createReadStream("./public/form.html", "UTF-8").pipe(res)
 //   // POST
 //   // res.writeHead(200, { "Content-Type": "text/html" })
 //   // res.end(body)
-// }
 
 server.listen(CONFIG.SERVER_PORT)

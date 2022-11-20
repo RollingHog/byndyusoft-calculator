@@ -86,15 +86,16 @@ const controller = new Controller()
 
 controller
 .doc('maps all existing routes; should be DEV mode only')
-.GET('/routes', () => {
+.GET('/', () => {
   const list = []
   for(let method in controller.routes) {
     for(let route in controller.routes[method]) {
       // list.push({method: i, url: j})
-      list.push(`<tr><td>${method}</td><td><a href="${route}">${route}</a></td><td>${controller.routes[method][route].doc}</td></tr>`)
+      list.push(`\t<tr><td>${method}</td><td><a href="${route}">${route.padEnd(7, ' ').replaceAll(' ','&nbsp;')}</a></td>
+        <td>${controller.routes[method][route].doc}</td></tr>\n`)
     }
   }
-  return `<table>${list.join('')}</table>`
+  return `<table>\n${list.join('')}</table>`
 })
 
 controller

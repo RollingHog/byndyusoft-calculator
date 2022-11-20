@@ -1,5 +1,5 @@
-import CustomError from "./misc/CustomError.js"
-import { VERSION } from "./VERSION.js"
+import CustomError from "../misc/CustomError.js"
+import { VERSION } from "../VERSION.js"
 
 const HTTP_METHOD = {
   GET: 'GET',

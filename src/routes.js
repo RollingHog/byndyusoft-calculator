@@ -1,4 +1,4 @@
-import controller from "./Controller.js"
+import controller from "./framework/Controller.js"
 import CustomError from "./misc/CustomError.js"
 
 controller
